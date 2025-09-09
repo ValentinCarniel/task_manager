@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Gestión de Tareas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#0891b2", // cyan-600
+              "primary-light": "#06b6d4", // cyan-500
+              "primary-dark": "#0e7490", // cyan-700
+              accent: "#8b5cf6", // violet-500
+              "accent-light": "#a78bfa", // violet-400
+              "accent-dark": "#7c3aed", // violet-600
+              surface: "#f8fafc", // slate-50
+              "surface-dark": "#1e293b", // slate-800
+              "text-primary": "#0f172a", // slate-900
+              "text-secondary": "#64748b", // slate-500
+            },
+            animation: {
+              "fade-in": "fadeIn 0.5s ease-in-out",
+              "slide-in": "slideIn 0.3s ease-out",
+              "bounce-subtle": "bounceSubtle 0.6s ease-in-out",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              slideIn: {
+                "0%": { transform: "translateX(-100%)" },
+                "100%": { transform: "translateX(0)" },
+              },
+              bounceSubtle: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-5px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .task-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .task-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      .priority-alta {
+        border-left: 4px solid #ef4444;
+      }
+      .priority-media {
+        border-left: 4px solid #f59e0b;
+      }
+      .priority-baja {
+        border-left: 4px solid #10b981;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-br from-primary via-primary-light to-accent min-h-screen"
+  >
+    <!-- Mobile Menu Button -->
+    <button
+      id="mobileMenuBtn"
+      class="lg:hidden fixed top-4 left-4 z-50 bg-white/20 backdrop-blur-md rounded-xl p-3 text-white hover:bg-white/30 transition-all duration-300"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        ></path>
+      </svg>
+    </button>
+
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="fixed left-0 top-0 h-full w-80 glass-effect transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40"
+    >
+      <div class="p-6 h-full flex flex-col">
+        <!-- Logo/Header -->
+        <div class="mb-8">
+          <h1 class="text-2xl font-bold text-white mb-2">TaskFlow</h1>
+          <p class="text-white/70 text-sm">Dashboard de Gestión</p>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1">
+          <ul class="space-y-3">
+            <li>
+              <button
+                id="navCreate"
+                class="nav-item w-full text-left px-4 py-3 rounded-xl text-white/90 hover:bg-white/20 transition-all duration-300 flex items-center space-x-3 active"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+                <span>Crear Tarea</span>
+              </button>
+            </li>
+            <li>
+              <button
+                id="navTasks"
+                class="nav-item w-full text-left px-4 py-3 rounded-xl text-white/90 hover:bg-white/20 transition-all duration-300 flex items-center space-x-3"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                  ></path>
+                </svg>
+                <span>Ver Tareas</span>
+              </button>
+            </li>
+            <li>
+              <button
+                id="navSearch"
+                class="nav-item w-full text-left px-4 py-3 rounded-xl text-white/90 hover:bg-white/20 transition-all duration-300 flex items-center space-x-3"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+                <span>Buscar</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Stats -->
+        <div class="mt-auto">
+          <div class="bg-white/10 rounded-xl p-4">
+            <h3 class="text-white font-semibold mb-2">Estadísticas</h3>
+            <div class="space-y-2 text-sm text-white/80">
+              <div class="flex justify-between">
+                <span>Total:</span>
+                <span id="totalTasks">0</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Completadas:</span>
+                <span id="completedTasks">0</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Pendientes:</span>
+                <span id="pendingTasks">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:ml-80 min-h-screen">
+      <!-- Create Task Section -->
+      <section id="createSection" class="section-content p-6">
+        <div class="max-w-4xl mx-auto">
+          <div
+            class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl p-8 animate-fade-in"
+          >
+            <div class="mb-8">
+              <h2 class="text-3xl font-bold text-text-primary mb-2">
+                Crear Nueva Tarea
+              </h2>
+              <p class="text-text-secondary">
+                Agrega una nueva tarea a tu lista de pendientes
+              </p>
+            </div>
+
+            <form id="taskForm" class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label
+                    for="title"
+                    class="block text-sm font-semibold text-text-primary"
+                    >Título</label
+                  >
+                  <input
+                    type="text"
+                    id="title"
+                    required
+                    placeholder="Ej: Comprar frutas"
+                    pattern="^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚüÜ\s]{3,100}$"
+                    minlength="3"
+                    maxlength="100"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 outline-none"
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label
+                    for="priority"
+                    class="block text-sm font-semibold text-text-primary"
+                    >Prioridad</label
+                  >
+                  <select
+                    id="priority"
+                    required
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 outline-none"
+                  >
+                    <option value="baja">🟢 Baja</option>
+                    <option value="media">🟡 Media</option>
+                    <option value="alta">🔴 Alta</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="description"
+                  class="block text-sm font-semibold text-text-primary"
+                  >Descripción</label
+                >
+                <textarea
+                  id="description"
+                  rows="4"
+                  required
+                  placeholder="Describe los detalles de tu tarea..."
+                  maxlength="255"
+                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 outline-none resize-none"
+                ></textarea>
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="due_date"
+                  class="block text-sm font-semibold text-text-primary"
+                  >Fecha de Vencimiento</label
+                >
+                <input
+                  type="date"
+                  id="due_date"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 outline-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center space-x-2"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+                <span>Agregar Tarea</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tasks List Section -->
+      <section id="tasksSection" class="section-content hidden p-6">
+        <div class="max-w-6xl mx-auto">
+          <div
+            class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl p-8 animate-fade-in"
+          >
+            <div class="mb-8">
+              <h2 class="text-3xl font-bold text-text-primary mb-2">
+                Mis Tareas
+              </h2>
+              <p class="text-text-secondary">
+                Gestiona y organiza todas tus tareas
+              </p>
+            </div>
+
+            <!-- Task Filters -->
+            <div class="mb-6 flex flex-wrap gap-3">
+              <button
+                class="filter-btn active px-4 py-2 rounded-lg bg-primary text-white font-medium transition-all duration-300"
+                data-filter="all"
+              >
+                Todas
+              </button>
+              <button
+                class="filter-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-all duration-300"
+                data-filter="alta"
+              >
+                Alta Prioridad
+              </button>
+              <button
+                class="filter-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-all duration-300"
+                data-filter="media"
+              >
+                Media Prioridad
+              </button>
+              <button
+                class="filter-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-all duration-300"
+                data-filter="baja"
+              >
+                Baja Prioridad
+              </button>
+              <button
+                class="filter-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-all duration-300"
+                data-filter="completed"
+              >
+                Completadas
+              </button>
+            </div>
+
+            <div
+              id="taskList"
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            ></div>
+
+            <div id="emptyState" class="text-center py-12 hidden">
+              <svg
+                class="w-16 h-16 mx-auto text-gray-400 mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                ></path>
+              </svg>
+              <h3 class="text-xl font-semibold text-gray-600 mb-2">
+                No hay tareas
+              </h3>
+              <p class="text-gray-500">¡Crea tu primera tarea para comenzar!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search Section -->
+      <section id="searchSection" class="section-content hidden p-6">
+        <div class="max-w-4xl mx-auto">
+          <div
+            class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl p-8 animate-fade-in"
+          >
+            <div class="mb-8">
+              <h2 class="text-3xl font-bold text-text-primary mb-2">
+                Buscar Tareas
+              </h2>
+              <p class="text-text-secondary">
+                Encuentra rápidamente las tareas que necesitas
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div class="space-y-2">
+                <label class="block text-sm font-semibold text-text-primary"
+                  >Buscar por título</label
+                >
+                <input
+                  type="text"
+                  id="searchTitle"
+                  placeholder="Escribe el título..."
+                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 outline-none"
+                />
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-semibold text-text-primary"
+                  >Buscar por fecha</label
+                >
+                <input
+                  type="date"
+                  id="searchDate"
+                  class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 outline-none"
+                />
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-semibold text-text-primary"
+                  >Acciones</label
+                >
+                <div class="flex gap-2">
+                  <button
+                    id="searchBtn"
+                    class="flex-1 bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-dark transition-all duration-300"
+                  >
+                    Buscar
+                  </button>
+                  <button
+                    id="resetBtn"
+                    class="flex-1 bg-gray-400 text-white font-bold py-3 rounded-xl hover:bg-gray-500 transition-all duration-300"
+                  >
+                    Limpiar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="searchResults"
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            ></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Overlay for mobile -->
+    <div
+      id="overlay"
+      class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden"
+    ></div>
+    <div
+      id="toast"
+      class="fixed top-6 right-6 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg opacity-0 pointer-events-none transition-all duration-300 z-50"
+    >
+      Tarea creada con éxito ✅
+    </div>
+    <!-- Toast -->
+    <div
+      id="toast"
+      class="fixed top-6 right-6 opacity-0 pointer-events-none transition-all duration-300 z-50"
+    ></div>
+
+    <script src="./js/app.js"></script>
+  </body>
+</html>
