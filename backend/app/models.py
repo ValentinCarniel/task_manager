@@ -10,7 +10,7 @@ class PriorityEnum(enum.Enum):
 
 
 class Task(Base):
-    __tablename__ = "tasks"
+    __tablename__ = "z_tasks"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title = Column(String(100), nullable=False)

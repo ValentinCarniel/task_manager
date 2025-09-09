@@ -6,3 +6,13 @@ DATABASE_URL = "mysql+pymysql://cesara_6835:H4YLRJ37aGdHFPcY@45.235.98.42:3306/c
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+# Función para obtener sesión de DB en dependencias
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

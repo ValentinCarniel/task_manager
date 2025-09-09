@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow - Iniciar Sesión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#0891b2", // cyan-600
+              "primary-light": "#06b6d4", // cyan-500
+              "primary-dark": "#0e7490", // cyan-700
+              accent: "#8b5cf6", // violet-500
+              "accent-light": "#a78bfa", // violet-400
+              "accent-dark": "#7c3aed", // violet-600
+              surface: "#f8fafc", // slate-50
+              "surface-dark": "#1e293b", // slate-800
+              "text-primary": "#0f172a", // slate-900
+              "text-secondary": "#64748b", // slate-500
+            },
+            animation: {
+              "fade-in": "fadeIn 0.5s ease-in-out",
+              "slide-in": "slideIn 0.3s ease-out",
+              "bounce-subtle": "bounceSubtle 0.6s ease-in-out",
+              float: "float 3s ease-in-out infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              slideIn: {
+                "0%": { transform: "translateX(-100%)" },
+                "100%": { transform: "translateX(0)" },
+              },
+              bounceSubtle: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-5px)" },
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .floating-shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .shape-1 {
+        width: 100px;
+        height: 100px;
+        top: 10%;
+        left: 10%;
+        animation: float 4s ease-in-out infinite;
+      }
+
+      .shape-2 {
+        width: 150px;
+        height: 150px;
+        top: 60%;
+        right: 15%;
+        animation: float 5s ease-in-out infinite reverse;
+      }
+
+      .shape-3 {
+        width: 80px;
+        height: 80px;
+        bottom: 20%;
+        left: 20%;
+        animation: float 3.5s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-br from-primary via-primary-light to-accent min-h-screen overflow-hidden"
+  >
+    <!-- Floating Background Shapes -->
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+
+    <!-- Main Login Container -->
+    <div
+      class="min-h-screen flex items-center justify-center p-6 relative z-10"
+    >
+      <div
+        class="login-card rounded-3xl shadow-2xl p-8 w-full max-w-md animate-fade-in"
+      >
+        <!-- Logo/Header -->
+        <div class="text-center mb-8">
+          <div
+            class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl mb-4 animate-bounce-subtle"
+          >
+            <svg
+              class="w-8 h-8 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+              ></path>
+            </svg>
+          </div>
+          <h1 class="text-3xl font-bold text-text-primary mb-2">TaskFlow</h1>
+          <p class="text-text-secondary">Inicia sesión en tu cuenta</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-6">
+          <div class="space-y-2">
+            <label
+              for="email"
+              class="block text-sm font-semibold text-text-primary"
+            >
+              Correo Electrónico
+            </label>
+            <div class="relative">
+              <input
+                type="email"
+                id="email"
+                value="admin@taskflow.com"
+                required
+                class="w-full px-4 py-3 pl-12 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 outline-none"
+                placeholder="tu@email.com"
+              />
+              <svg
+                class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                ></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label
+              for="password"
+              class="block text-sm font-semibold text-text-primary"
+            >
+              Contraseña
+            </label>
+            <div class="relative">
+              <input
+                type="password"
+                id="password"
+                value="admin123"
+                required
+                class="w-full px-4 py-3 pl-12 pr-12 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 outline-none"
+                placeholder="••••••••"
+              />
+              <svg
+                class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                ></path>
+              </svg>
+              <button
+                type="button"
+                id="togglePassword"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              >
+                <svg
+                  id="eyeIcon"
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+              />
+              <span class="ml-2 text-sm text-text-secondary">Recordarme</span>
+            </label>
+            <a
+              href="#"
+              class="text-sm text-primary hover:text-primary-dark transition-colors duration-200"
+            >
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex items-center justify-center space-x-2"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+              ></path>
+            </svg>
+            <span>Iniciar Sesión</span>
+          </button>
+        </form>
+
+        <!-- Demo Credentials Info -->
+        <div class="mt-6 p-4 bg-primary/10 rounded-xl border border-primary/20">
+          <h3 class="text-sm font-semibold text-primary mb-2">
+            Credenciales de Demo:
+          </h3>
+          <div class="text-xs text-text-secondary space-y-1">
+            <p><strong>Email:</strong> admin@taskflow.com</p>
+            <p><strong>Contraseña:</strong> admin123</p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center">
+          <p class="text-sm text-text-secondary">
+            ¿No tienes una cuenta?
+            <a
+              href="#"
+              class="text-primary hover:text-primary-dark font-semibold transition-colors duration-200"
+            >
+              Regístrate aquí
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="fixed top-6 right-6 opacity-0 pointer-events-none transition-all duration-300 z-50"
+    ></div>
+
+    <script>
+      // Toggle password visibility
+      document
+        .getElementById("togglePassword")
+        .addEventListener("click", function () {
+          const passwordInput = document.getElementById("password");
+          const eyeIcon = document.getElementById("eyeIcon");
+
+          if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            eyeIcon.innerHTML = `
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7
+                 a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243
+                 M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+      `;
+          } else {
+            passwordInput.type = "password";
+            eyeIcon.innerHTML = `
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7
+                 -1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+      `;
+          }
+        });
+
+      // Show toast notification
+      function showToast(message, type = "success") {
+        const toast = document.getElementById("toast");
+        const bgColor = type === "success" ? "bg-green-500" : "bg-red-500";
+
+        toast.className = `fixed top-6 right-6 ${bgColor} text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 z-50`;
+        toast.textContent = message;
+        toast.style.opacity = "1";
+        toast.style.pointerEvents = "auto";
+
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          toast.style.pointerEvents = "none";
+        }, 3000);
+      }
+
+      // Validate email format
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      // Handle form submission
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value.trim();
+          const form = document.getElementById("loginForm");
+
+          // Basic validations
+          if (!email || !password) {
+            showToast("Todos los campos son obligatorios.", "error");
+            form.style.animation = "shake 0.5s ease-in-out";
+            setTimeout(() => (form.style.animation = ""), 500);
+            return;
+          }
+
+          if (!isValidEmail(email)) {
+            showToast("Por favor ingresa un correo válido.", "error");
+            form.style.animation = "shake 0.5s ease-in-out";
+            setTimeout(() => (form.style.animation = ""), 500);
+            return;
+          }
+
+          if (password.length < 6) {
+            showToast(
+              "La contraseña debe tener al menos 6 caracteres.",
+              "error"
+            );
+            form.style.animation = "shake 0.5s ease-in-out";
+            setTimeout(() => (form.style.animation = ""), 500);
+            return;
+          }
+
+          // Static credentials validation
+          if (email === "admin@taskflow.com" && password === "admin123") {
+            showToast("¡Inicio de sesión exitoso! Redirigiendo...", "success");
+
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1500);
+          } else {
+            showToast("Credenciales incorrectas. Intenta de nuevo.", "error");
+            form.style.animation = "shake 0.5s ease-in-out";
+            setTimeout(() => (form.style.animation = ""), 500);
+          }
+        });
+
+      // Add shake animation
+      const style = document.createElement("style");
+      style.textContent = `
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+  `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>

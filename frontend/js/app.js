@@ -138,8 +138,6 @@ class TaskManager {
       this.renderTasks();
       this.updateStats();
       this.taskForm.reset();
-
-      // 🔹 Mostrar toast de éxito
       this.showToast("Tarea creada con éxito ✅", "green");
     } catch (err) {
       console.error("Error creando tarea:", err);
@@ -270,7 +268,7 @@ class TaskManager {
 
   searchTasks() {
     const titleQuery = this.searchTitle.value.toLowerCase();
-    const dateQuery = this.searchDate.value;
+    const dateQuery = this.searchDate.value; // YYYY-MM-DD o D/M/YYYY
     let results = this.tasks;
 
     if (titleQuery)
@@ -279,7 +277,29 @@ class TaskManager {
           t.title.toLowerCase().includes(titleQuery) ||
           t.description.toLowerCase().includes(titleQuery)
       );
-    if (dateQuery) results = results.filter((t) => t.due_date === dateQuery);
+
+    if (dateQuery) {
+      results = results.filter((t) => {
+        const taskDate = new Date(t.due_date);
+        let inputDate;
+
+        if (dateQuery.includes("/")) {
+          // Formato D/M/YYYY
+          const [d, m, y] = dateQuery.split("/").map(Number);
+          inputDate = new Date(y, m - 1, d);
+        } else {
+          // Formato YYYY-MM-DD
+          const [y, m, d] = dateQuery.split("-").map(Number);
+          inputDate = new Date(y, m - 1, d);
+        }
+
+        return (
+          taskDate.getFullYear() === inputDate.getFullYear() &&
+          taskDate.getMonth() === inputDate.getMonth() &&
+          taskDate.getDate() === inputDate.getDate()
+        );
+      });
+    }
 
     this.searchResults.innerHTML =
       results.map((t) => this.createTaskCard(t)).join("") ||
@@ -292,7 +312,6 @@ class TaskManager {
     this.searchResults.innerHTML = "";
   }
 
-  // 🔹 Nuevo método: mostrar toast
   showToast(message, color = "green") {
     let toast = document.getElementById("toast");
     if (!toast) {
